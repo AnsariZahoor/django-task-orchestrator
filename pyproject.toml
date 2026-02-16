@@ -1,0 +1,18 @@
+[project]
+name = "django-task-orchestrator"
+version = "0.1.0"
+description = "Django Task Orchestrator"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "celery[redis]>=5.6.2",
+    "django>=4.2.28",
+    "django-redis>=6.0.0",
+    "djangorestframework>=3.16.1",
+    "flower>=2.0.1",
+    "h2>=4.3.0",
+    "httpx>=0.28.1",
+    "psycopg2-binary>=2.9.11",
+    "redis>=6.4.0",
+    "tenacity>=9.1.2",
+]

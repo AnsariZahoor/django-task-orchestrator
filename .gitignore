@@ -1,0 +1,23 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Django
+db.sqlite3
+*.log
+staticfiles/
+media/
+
+# Celery
+celerybeat-schedule
+celerybeat-schedule.db
+
+# Environment
+.env
