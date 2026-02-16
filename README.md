@@ -26,6 +26,10 @@ A production-grade distributed task orchestration system built with Django, Cele
                                            └──────────┘ └──────────┘ └────────────┘
 ```
 
+## Deployment Architecture
+![image](https://media.discordapp.net/attachments/1472256547722629382/1472858670457946123/celery_deployment.png?ex=69941a07&is=6992c887&hm=ad916b1a4149128f611fcd24dc39962662713299b773fd29431fba69eb7fd2af&=&format=webp&quality=lossless&width=2425&height=1123)
+
+
 ## Celery Implementation
 
 ### Task Topology
