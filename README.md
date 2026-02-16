@@ -1,29 +1,29 @@
-# Crypto Market Data Orchestrator
+# Crypto Market Data API
 
 A production-grade distributed task orchestration system built with Django, Celery, and Redis. Aggregates real-time trading pair metadata and price tickers from multiple cryptocurrency exchanges (Binance, Bybit, Hyperliquid) across spot and futures markets.
 
 ## Architecture
 
 ```
-                         ┌─────────────────┐
+                         ┌──────────────────┐
                          │   Celery Beat    │
                          │  (Scheduler)     │
                          └────────┬─────────┘
-                                  │ every 30s
+                                  │ every 5min
                                   ▼
-┌──────────┐         ┌──────────────────────┐         ┌──────────┐
+┌───────────┐         ┌──────────────────────┐         ┌──────────┐
 │  Django   │◄───────►│       Redis          │◄───────►│  Celery  │
 │  REST API │         │  (Broker + Backend)  │         │  Worker  │
-└──────────┘         └──────────────────────┘         └─────┬────┘
+└───────────┘         └──────────────────────┘         └─────┬────┘
       │                                                      │
       │                                               fan-out (group)
       │                                          ┌───────────┼───────────┐
       ▼                                          ▼           ▼           ▼
-┌──────────┐                              ┌──────────┐ ┌──────────┐ ┌────────────┐
-│ PostgreSQL│◄────── bulk upsert ─────────│ Binance  │ │  Bybit   │ │Hyperliquid │
-│          │                              │ spot +   │ │ spot +   │ │ spot +     │
-└──────────┘                              │ futures  │ │ futures  │ │ futures    │
-                                          └──────────┘ └──────────┘ └────────────┘
+┌───────────┐                              ┌──────────┐ ┌──────────┐ ┌────────────┐
+│ PostgreSQL│◄─────── bulk upsert ─────────│ Binance  │ │  Bybit   │ │Hyperliquid │
+│           │                              │ spot +   │ │ spot +   │ │ spot +     │
+└───────────┘                              │ futures  │ │ futures  │ │ futures    │
+                                           └──────────┘ └──────────┘ └────────────┘
 ```
 
 ## Celery Implementation
@@ -33,7 +33,7 @@ A production-grade distributed task orchestration system built with Django, Cele
 The system uses a **fan-out/fan-in** pattern via Celery `group` primitives to parallelize exchange syncing:
 
 ```
-sync_all_pairs (periodic, every 30s)
+sync_all_pairs (periodic, every 300s)
   └── group([
         sync_exchange_pairs("binance", "spot"),
         sync_exchange_pairs("binance", "futures"),
@@ -55,9 +55,9 @@ sync_all_pairs (periodic, every 30s)
 
 ```python
 app.conf.beat_schedule = {
-    "sync-all-pairs-every-30-seconds": {
+    "sync-all-pairs-every-5-minutes": {
         "task": "market.tasks.sync_all_pairs",
-        "schedule": 30.0,
+        "schedule": 300.0,  # Runs every 5 minutes (300.0 seconds)
     },
 }
 ```

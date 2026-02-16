@@ -9,8 +9,8 @@ app.config_from_object("django.conf:settings", namespace="CELERY")
 app.autodiscover_tasks()
 
 app.conf.beat_schedule = {
-    "sync-all-pairs-every-30-seconds": {
+    "sync-all-pairs-every-5-minutes": {
         "task": "market.tasks.sync_all_pairs",
-        "schedule": 30.0,  # Runs every 30 seconds (30.0 seconds)
+        "schedule": 300.0,  # Runs every 5 minutes (300.0 seconds)
     },
 }
